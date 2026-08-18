@@ -26,13 +26,14 @@
     </div>
 
     <script type="module">
+        // Updated CDN Links to guarantee clean module loading on GitHub Pages
         import { initializeApp } from "https://gstatic.com";
         import { getDatabase, ref, get } from "https://gstatic.com";
 
-        // Config updated with databaseURL
+        // Project configuration
         const firebaseConfig = {
             apiKey: "AIzaSyD-MU0cQwdd08CSRcT3kU5AWCIE-9YBbUo",
-            authDomain: "://firebaseapp.com",
+            authDomain: "anwinbot.firebaseapp.com",
             projectId: "anwinbot",
             databaseURL: "https://firebaseio.com", 
             storageBucket: "anwinbot.firebasestorage.app",
@@ -56,7 +57,6 @@
                     const data = snapshot.val();
                    
                     if (data && typeof data === 'object') {
-                        // Fixed typo: root.keys changed to rootKeys
                         const rootKeys = Object.keys(data);
                         out.innerText = `Found ${rootKeys.length} root table/node name(s):\n\n` +
                                         rootKeys.map(key => `- ${key}`).join('\n');
