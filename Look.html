@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Root Table Name Inspector</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+        .box { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px; background: #fafafa; }
+        button { padding: 10px 15px; font-size: 15px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 3px; }
+        button:hover { background: #0056b3; }
+        pre { background: #222; color: #fff; padding: 15px; overflow-x: auto; border-radius: 5px; max-height: 400px; }
+    </style>
+</head>
+<body>
+
+    <h1>Firebase Realtime Database Root Nodes</h1>
+    <p>Click the button below to retrieve and print the root-level keys (table/node names) of your Realtime Database.</p>
+
+    <div class="box">
+        <h3>Realtime Database Root Keys</h3>
+        <button id="btn-rtdb-roots">Print Root Table Names</button>
+        <pre id="output-rtdb">Root table names will appear here...</pre>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Your exact project configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-MU0cQwdd08CSRcT3kU5AWCIE-9YBbUo",
+            authDomain: "anwinbot.firebaseapp.com",
+            projectId: "anwinbot",
+            storageBucket: "anwinbot.firebasestorage.app",
+            messagingSenderId: "375294740155",
+            appId: "1:375294740155:web:d40c9b4abe9224ea57cb9e",
+            measurementId: "G-HRW9QWCLRB"
+        };
+
+        // Initialize Firebase App
+        const app = initializeApp(firebaseConfig);
+
+        // --- PRINT REALTIME DATABASE ROOT KEYS ---
+        document.getElementById('btn-rtdb-roots').addEventListener('click', async () => {
+            const out = document.getElementById('output-rtdb');
+            out.innerText = "Fetching root structure...";
+            try {
+                const db = getDatabase(app);
+                const snapshot = await get(ref(db));
+               
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                   
+                    if (data && typeof data === 'object') {
+                        // Extract top-level keys (table/node names)
+                        const rootKeys = Object.keys(data);
+                        out.innerText = `Found ${rootKeys.length} root table/node name(s):\n\n` +
+                                        root.keys.map(key => `- ${key}`).join('\n');
+                    } else {
+                        out.innerText = "Root data exists, but is not a JSON object.";
+                    }
+                } else {
+                    out.innerText = "Database is completely empty (Null root).";
+                }
+            } catch (error) {
+                out.innerText = "Error: " + error.message + "\n\n💡 Tip: Check if your database rules permit read access.";
+            }
+        });
+    </script>
+</body>
+</html>
