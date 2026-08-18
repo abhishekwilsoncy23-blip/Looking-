@@ -26,16 +26,16 @@
     </div>
 
     <script type="module">
-        // Updated CDN Links to guarantee clean module loading on GitHub Pages
-        import { initializeApp } from "https://gstatic.com";
-        import { getDatabase, ref, get } from "https://gstatic.com";
+        // Fixed CORS by using Skypack CDN for stable module delivery on GitHub Pages
+        import { initializeApp } from "https://skypack.dev";
+        import { getDatabase, ref, get } from "https://skypack.dev";
 
-        // Project configuration
+        // Project configuration (Restored your accurate database URL)
         const firebaseConfig = {
             apiKey: "AIzaSyD-MU0cQwdd08CSRcT3kU5AWCIE-9YBbUo",
             authDomain: "anwinbot.firebaseapp.com",
             projectId: "anwinbot",
-            databaseURL: "https://firebaseio.com", 
+            databaseURL: "https://anwinbot-default-rtdb.firebaseio.com", 
             storageBucket: "anwinbot.firebasestorage.app",
             messagingSenderId: "375294740155",
             appId: "1:375294740155:web:d40c9b4abe9224ea57cb9e",
