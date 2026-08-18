@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Firebase Root Table Name Inspector</title>
+    <!-- Prevents favicon 404 error -->
+    <link rel="icon" href="data:,">
     <style>
         body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
         .box { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px; background: #fafafa; }
@@ -24,14 +26,15 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { initializeApp } from "https://gstatic.com";
+        import { getDatabase, ref, get } from "https://gstatic.com";
 
-        // Your exact project configuration
+        // Config updated with databaseURL
         const firebaseConfig = {
             apiKey: "AIzaSyD-MU0cQwdd08CSRcT3kU5AWCIE-9YBbUo",
-            authDomain: "anwinbot.firebaseapp.com",
+            authDomain: "://firebaseapp.com",
             projectId: "anwinbot",
+            databaseURL: "https://firebaseio.com", 
             storageBucket: "anwinbot.firebasestorage.app",
             messagingSenderId: "375294740155",
             appId: "1:375294740155:web:d40c9b4abe9224ea57cb9e",
@@ -53,10 +56,10 @@
                     const data = snapshot.val();
                    
                     if (data && typeof data === 'object') {
-                        // Extract top-level keys (table/node names)
+                        // Fixed typo: root.keys changed to rootKeys
                         const rootKeys = Object.keys(data);
                         out.innerText = `Found ${rootKeys.length} root table/node name(s):\n\n` +
-                                        root.keys.map(key => `- ${key}`).join('\n');
+                                        rootKeys.map(key => `- ${key}`).join('\n');
                     } else {
                         out.innerText = "Root data exists, but is not a JSON object.";
                     }
