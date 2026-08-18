@@ -1,457 +1,573 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Firebase Root Table Name Inspector</title>
-    <link rel="icon" href="data:," />
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Firebase Config Editor + Root Inspector</title>
+  <link rel="icon" href="data:," />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+    }
 
-        body {
-            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-            background: #f6f8fc;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 24px;
-        }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f0f3f8;
+      padding: 24px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
 
-        .card {
-            max-width: 820px;
-            width: 100%;
-            background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-            padding: 32px 36px 40px;
-            transition: box-shadow 0.2s;
-        }
+    .container {
+      max-width: 880px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.07);
+      padding: 30px 32px 36px;
+    }
 
-        h1 {
-            font-size: 26px;
-            font-weight: 600;
-            margin: 0 0 6px 0;
-            color: #1a1f36;
-            letter-spacing: -0.3px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    h1 {
+      font-size: 26px;
+      font-weight: 600;
+      margin: 0 0 6px 0;
+      color: #0b1a33;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
 
-        h1 small {
-            font-size: 16px;
-            font-weight: 400;
-            color: #5e6f8d;
-            letter-spacing: 0;
-        }
+    h1 small {
+      font-size: 16px;
+      font-weight: 400;
+      color: #5e6f8d;
+    }
 
-        .subtitle {
-            color: #5e6f8d;
-            font-size: 15px;
-            margin: 0 0 28px 0;
-            line-height: 1.5;
-            border-left: 4px solid #e6edf6;
-            padding-left: 16px;
-        }
+    .sub {
+      color: #5e6f8d;
+      font-size: 14px;
+      margin: 0 0 24px 0;
+      border-left: 4px solid #dce3ef;
+      padding-left: 16px;
+    }
 
-        .box {
-            background: #f9faff;
-            border-radius: 14px;
-            border: 1px solid #e9edf4;
-            padding: 20px 24px 24px;
-            margin-bottom: 6px;
-        }
+    .config-panel {
+      background: #f8faff;
+      border: 1px solid #e3e9f2;
+      border-radius: 16px;
+      padding: 20px 24px 24px;
+      margin-bottom: 28px;
+    }
 
-        .box-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
+    .config-panel h3 {
+      font-size: 16px;
+      font-weight: 500;
+      margin: 0 0 14px 0;
+      color: #1a2b44;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-        .box-header h3 {
-            font-size: 18px;
-            font-weight: 500;
-            margin: 0;
-            color: #1a1f36;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+    .config-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 20px;
+    }
 
-        .box-header h3 .badge {
-            background: #e6edf6;
-            font-size: 12px;
-            font-weight: 500;
-            padding: 2px 10px;
-            border-radius: 20px;
-            color: #2c3e5c;
-        }
+    .config-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
 
-        button {
-            padding: 10px 22px;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            background: #1a5cff;
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            transition: background 0.15s, transform 0.1s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 2px 8px rgba(26, 92, 255, 0.25);
-        }
+    .config-item label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #3d4f6b;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
 
-        button:hover {
-            background: #0f4ad0;
-        }
+    .config-item input {
+      padding: 8px 12px;
+      border: 1px solid #d0d9e8;
+      border-radius: 8px;
+      font-size: 13px;
+      background: #ffffff;
+      transition: border 0.15s;
+      width: 100%;
+    }
 
-        button:active {
-            transform: scale(0.97);
-        }
+    .config-item input:focus {
+      border-color: #1a5cff;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(26, 92, 255, 0.12);
+    }
 
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
+    .config-actions {
+      display: flex;
+      gap: 14px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
 
-        .output-wrap {
-            position: relative;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #0e141f;
-            border: 1px solid #1e2a3a;
-        }
+    .btn {
+      padding: 9px 22px;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-        pre {
-            margin: 0;
-            padding: 18px 20px;
-            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-            font-size: 14px;
-            line-height: 1.7;
-            color: #e3e9f2;
-            background: #0e141f;
-            overflow-x: auto;
-            max-height: 420px;
-            min-height: 80px;
-            white-space: pre-wrap;
-            word-break: break-word;
-        }
+    .btn-primary {
+      background: #1a5cff;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(26, 92, 255, 0.25);
+    }
+    .btn-primary:hover {
+      background: #0f4ad0;
+    }
 
-        .pre-placeholder {
-            color: #6a7f9e;
-            font-style: italic;
-            font-weight: 400;
-        }
+    .btn-secondary {
+      background: #eef2f7;
+      color: #1a2b44;
+    }
+    .btn-secondary:hover {
+      background: #dce3ef;
+    }
 
-        .status-line {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            color: #3d4f6b;
-            padding: 8px 4px 0 4px;
-        }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
 
-        .status-line .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #d0d9e8;
-            border-top-color: #1a5cff;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-        }
+    .status-badge {
+      font-size: 13px;
+      color: #3d6b4a;
+      background: #e6f5ed;
+      padding: 4px 14px;
+      border-radius: 30px;
+      display: inline-block;
+    }
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+    .status-badge.error {
+      background: #fde8e8;
+      color: #b33a3a;
+    }
 
-        .error-text {
-            color: #f87171;
-        }
+    .box {
+      border: 1px solid #e3e9f2;
+      border-radius: 16px;
+      padding: 16px 20px 20px;
+      background: #fafcff;
+    }
 
-        .footer-note {
-            margin-top: 22px;
-            font-size: 13px;
-            color: #6a7f9e;
-            border-top: 1px solid #e9edf4;
-            padding-top: 18px;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
+    .box-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
 
-        .footer-note code {
-            background: #eef2f7;
-            padding: 2px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            color: #1a2b44;
-        }
+    .box-header h3 {
+      font-size: 17px;
+      font-weight: 500;
+      margin: 0;
+      color: #0b1a33;
+    }
 
-        .key-list {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
+    .box-header .badge {
+      background: #dce3ef;
+      font-size: 13px;
+      padding: 2px 12px;
+      border-radius: 30px;
+      font-weight: 500;
+      color: #1a2b44;
+    }
 
-        .key-item {
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-            padding: 2px 0;
-        }
+    .output-wrap {
+      background: #0e141f;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #1e2a3a;
+    }
 
-        .key-item .bullet {
-            color: #6a7f9e;
-            font-weight: 300;
-        }
+    pre {
+      margin: 0;
+      padding: 16px 20px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 13.5px;
+      line-height: 1.7;
+      color: #e3e9f2;
+      background: #0e141f;
+      overflow-x: auto;
+      max-height: 400px;
+      min-height: 80px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
 
-        .key-item .key-name {
-            color: #b7d0f0;
-            font-weight: 500;
-        }
+    .pre-placeholder {
+      color: #6a7f9e;
+      font-style: italic;
+    }
 
-        .key-count {
-            color: #8aa0c0;
-            font-size: 13px;
-            margin-bottom: 10px;
-        }
+    .status-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #3d4f6b;
+    }
 
-        @media (max-width: 600px) {
-            .card {
-                padding: 18px 16px 24px;
-            }
-            .box {
-                padding: 14px 16px 18px;
-            }
-            h1 {
-                font-size: 21px;
-                flex-wrap: wrap;
-            }
-            .box-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            button {
-                width: 100%;
-                justify-content: center;
-            }
-            pre {
-                font-size: 13px;
-                padding: 14px 16px;
-                max-height: 300px;
-            }
-        }
-    </style>
+    .key-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .key-item {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      padding: 2px 0;
+    }
+    .key-item .bullet {
+      color: #6a7f9e;
+    }
+    .key-item .key-name {
+      color: #b7d0f0;
+      font-weight: 500;
+    }
+    .key-count {
+      color: #8aa0c0;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 16px;
+      }
+      .config-grid {
+        grid-template-columns: 1fr;
+      }
+      .config-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn {
+        justify-content: center;
+      }
+      .box-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
 </head>
-
 <body>
-    <div class="card">
 
-        <h1>
-            📡 Firebase Root Inspector
-            <small>Realtime Database</small>
-        </h1>
-        <div class="subtitle">
-            Retrieves and lists all root-level <strong>keys</strong> (nodes / tables) from your Firebase RTDB.
-        </div>
+<div class="container">
+  <h1>
+    ⚙️ Firebase Config Editor
+    <small>+ Root Inspector</small>
+  </h1>
+  <div class="sub">
+    Edit your Firebase Realtime Database settings below, then inspect root nodes.
+  </div>
 
-        <div class="box">
-            <div class="box-header">
-                <h3>
-                    📂 Root Keys
-                    <span class="badge" id="key-count-badge">—</span>
-                </h3>
-                <button id="btn-rtdb-roots">
-                    🔍 Inspect Root Nodes
-                </button>
-            </div>
-
-            <div class="output-wrap">
-                <pre id="output-rtdb"><span class="pre-placeholder">Root table names will appear here…</span></pre>
-            </div>
-
-            <div class="status-line" id="status-line">
-                <span id="status-text">Ready</span>
-            </div>
-        </div>
-
-        <div class="footer-note">
-            <span>Project: <code>anwinbot</code></span>
-            <span>Database: <code>anwinbot-default-rtdb</code></span>
-        </div>
-
+  <!-- CONFIGURATION PANEL -->
+  <div class="config-panel">
+    <h3>🔐 Firebase Configuration</h3>
+    <div class="config-grid" id="configGrid">
+      <div class="config-item">
+        <label>API Key</label>
+        <input type="text" id="cfg-apiKey" value="AIzaSyD-MU0cQwdd08CSRcT3kU5AWCIE-9YBbUo" />
+      </div>
+      <div class="config-item">
+        <label>Auth Domain</label>
+        <input type="text" id="cfg-authDomain" value="anwinbot.firebaseapp.com" />
+      </div>
+      <div class="config-item">
+        <label>Project ID</label>
+        <input type="text" id="cfg-projectId" value="anwinbot" />
+      </div>
+      <div class="config-item">
+        <label>Database URL</label>
+        <input type="text" id="cfg-databaseURL" value="https://anwinbot-default-rtdb.firebaseio.com" />
+      </div>
+      <div class="config-item">
+        <label>Storage Bucket</label>
+        <input type="text" id="cfg-storageBucket" value="anwinbot.firebasestorage.app" />
+      </div>
+      <div class="config-item">
+        <label>Messaging Sender ID</label>
+        <input type="text" id="cfg-messagingSenderId" value="375294740155" />
+      </div>
+      <div class="config-item">
+        <label>App ID</label>
+        <input type="text" id="cfg-appId" value="1:375294740155:web:d40c9b4abe9224ea57cb9e" />
+      </div>
+      <div class="config-item">
+        <label>Measurement ID</label>
+        <input type="text" id="cfg-measurementId" value="G-HRW9QWCLRB" />
+      </div>
     </div>
 
-    <!-- Firebase Compat SDK (reliable, no ESM import issues) -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js">
-    </script>
+    <div class="config-actions">
+      <button class="btn btn-primary" id="btn-apply-config">✅ Apply Config</button>
+      <span id="config-status" class="status-badge">Ready</span>
+      <span style="font-size:13px; color:#5e6f8d; margin-left:auto;">Changes take effect immediately</span>
+    </div>
+  </div>
 
-    <script>
-        (function() {
-            'use strict';
+  <!-- INSPECTOR -->
+  <div class="box">
+    <div class="box-header">
+      <h3>📂 Root Keys</h3>
+      <span class="badge" id="key-count-badge">—</span>
+    </div>
 
-            // ----- Firebase Configuration -----
-            const firebaseConfig = {
-                apiKey: "AIzaSyD-MU0cQwdd08CSRcT3kU5AWCIE-9YBbUo",
-                authDomain: "anwinbot.firebaseapp.com",
-                projectId: "anwinbot",
-               databaseURL: "https://anwinbot.firebaseio.com",
-                storageBucket: "anwinbot.firebasestorage.app",
-                messagingSenderId: "375294740155",
-                appId: "1:375294740155:web:d40c9b4abe9224ea57cb9e",
-                measurementId: "G-HRW9QWCLRB"
-            };
+    <div class="output-wrap">
+      <pre id="output-rtdb"><span class="pre-placeholder">Root table names will appear here…</span></pre>
+    </div>
 
-            // ----- Initialize Firebase -----
-            let app;
-            let database;
-            try {
-                app = firebase.initializeApp(firebaseConfig);
-                database = firebase.database(app);
-            } catch (initError) {
-                // If already initialized, grab the existing instance
-                app = firebase.app();
-                database = firebase.database(app);
-            }
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:12px;">
+      <button class="btn btn-primary" id="btn-rtdb-roots">🔍 Inspect Root Nodes</button>
+      <span id="inspect-status" style="font-size:14px; color:#3d4f6b;">Ready</span>
+    </div>
+  </div>
 
-            // ----- DOM refs -----
-            const btn = document.getElementById('btn-rtdb-roots');
-            const output = document.getElementById('output-rtdb');
-            const statusText = document.getElementById('status-text');
-            const badge = document.getElementById('key-count-badge');
+  <div style="margin-top:20px; font-size:12px; color:#6a7f9e; border-top:1px solid #e3e9f2; padding-top:16px;">
+    <span>Project: <code>anwinbot</code></span> &nbsp;·&nbsp;
+    <span>Click <strong>Apply Config</strong> after editing any field.</span>
+  </div>
+</div>
 
-            // ----- Helper: update UI state -----
-            function setStatus(msg, isError = false) {
-                statusText.textContent = msg;
-                statusText.style.color = isError ? '#f87171' : '#3d4f6b';
-            }
+<!-- Firebase Compat SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
+</script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js">
+</script>
 
-            function setLoading(loading) {
-                btn.disabled = loading;
-                if (loading) {
-                    btn.innerHTML = '⏳ Loading…';
-                    setStatus('Fetching root structure…');
-                } else {
-                    btn.innerHTML = '🔍 Inspect Root Nodes';
-                }
-            }
+<script>
+  (function() {
+    'use strict';
 
-            // ----- Main: fetch root keys -----
-            async function fetchRootKeys() {
-                setLoading(true);
+    // ----- DOM refs (config) -----
+    const cfgFields = {
+      apiKey: document.getElementById('cfg-apiKey'),
+      authDomain: document.getElementById('cfg-authDomain'),
+      projectId: document.getElementById('cfg-projectId'),
+      databaseURL: document.getElementById('cfg-databaseURL'),
+      storageBucket: document.getElementById('cfg-storageBucket'),
+      messagingSenderId: document.getElementById('cfg-messagingSenderId'),
+      appId: document.getElementById('cfg-appId'),
+      measurementId: document.getElementById('cfg-measurementId'),
+    };
 
-                // Clear previous output
-                output.innerHTML = '';
-                badge.textContent = '…';
+    const btnApply = document.getElementById('btn-apply-config');
+    const configStatus = document.getElementById('config-status');
 
-                try {
-                    const snapshot = await database.ref('/').get();
+    const btnInspect = document.getElementById('btn-rtdb-roots');
+    const output = document.getElementById('output-rtdb');
+    const badge = document.getElementById('key-count-badge');
+    const inspectStatus = document.getElementById('inspect-status');
 
-                    if (!snapshot.exists()) {
-                        output.innerHTML = '🗄️ Database is <strong>completely empty</strong> (null root).';
-                        badge.textContent = '0';
-                        setStatus('Empty database');
-                        return;
-                    }
+    // ----- Current Firebase app & database reference -----
+    let currentApp = null;
+    let currentDb = null;
 
-                    const data = snapshot.val();
+    // ----- Helper: get config object from inputs -----
+    function getConfigFromUI() {
+      return {
+        apiKey: cfgFields.apiKey.value.trim(),
+        authDomain: cfgFields.authDomain.value.trim(),
+        projectId: cfgFields.projectId.value.trim(),
+        databaseURL: cfgFields.databaseURL.value.trim(),
+        storageBucket: cfgFields.storageBucket.value.trim(),
+        messagingSenderId: cfgFields.messagingSenderId.value.trim(),
+        appId: cfgFields.appId.value.trim(),
+        measurementId: cfgFields.measurementId.value.trim(),
+      };
+    }
 
-                    if (data === null || typeof data !== 'object') {
-                        output.innerHTML = '⚠️ Root data exists but is <strong>not a JSON object</strong>.';
-                        badge.textContent = '?';
-                        setStatus('Unexpected data type');
-                        return;
-                    }
+    // ----- Apply config (re‑initialize Firebase) -----
+    function applyConfig() {
+      const config = getConfigFromUI();
 
-                    const keys = Object.keys(data);
+      // Validate required fields
+      if (!config.apiKey || !config.databaseURL || !config.projectId) {
+        configStatus.textContent = '❌ Missing required fields (apiKey, databaseURL, projectId)';
+        configStatus.className = 'status-badge error';
+        return false;
+      }
 
-                    if (keys.length === 0) {
-                        output.innerHTML = '📭 Root is an empty object — no child nodes found.';
-                        badge.textContent = '0';
-                        setStatus('No root nodes');
-                        return;
-                    }
+      try {
+        // Delete existing app (if any) to avoid "already initialized" errors
+        if (currentApp) {
+          // For compat SDK, we can delete the app by name if we used a named app.
+          // Since we use default, we can't delete it easily, but we can reinitialize with a different name.
+          // Better: use a named app for each config.
+          // We'll use a named app "custom" and re‑create it.
+          try {
+            const existing = firebase.app('custom');
+            existing.delete();
+          } catch (_) { /* ignore if not exists */ }
+        }
 
-                    // Build a clean, readable list
-                    const listHtml = keys.map((key, index) =>
-                        `<div class="key-item">
-                                <span class="bullet">${String(index + 1).padStart(2, ' ')}.</span>
-                                <span class="key-name">${escapeHtml(key)}</span>
-                            </div>`
-                    ).join('');
+        // Initialize with a unique name (so we can delete later)
+        const app = firebase.initializeApp(config, 'custom');
+        currentApp = app;
+        currentDb = firebase.database(app);
 
-                    const count = keys.length;
-                    badge.textContent = count;
+        configStatus.textContent = '✅ Config applied successfully';
+        configStatus.className = 'status-badge';
+        inspectStatus.textContent = 'Ready (config updated)';
+        // Reset output
+        output.innerHTML = '<span class="pre-placeholder">Root table names will appear here…</span>';
+        badge.textContent = '—';
+        return true;
+      } catch (error) {
+        console.error('Config apply error:', error);
+        configStatus.textContent = '❌ Error: ' + error.message;
+        configStatus.className = 'status-badge error';
+        return false;
+      }
+    }
 
-                    output.innerHTML = `
-                            <div class="key-count">Found <strong>${count}</strong> root node${count > 1 ? 's' : ''}:</div>
-                            <div class="key-list">${listHtml}</div>
-                        `;
+    // ----- Inspect root keys using currentDb -----
+    async function fetchRootKeys() {
+      if (!currentDb) {
+        // Try to apply config first
+        const ok = applyConfig();
+        if (!ok) {
+          inspectStatus.textContent = '⚠️ Please fix config and apply.';
+          return;
+        }
+      }
 
-                    setStatus(`✅ Loaded ${count} root key${count > 1 ? 's' : ''}`);
+      // Show loading
+      btnInspect.disabled = true;
+      btnInspect.innerHTML = '⏳ Loading…';
+      inspectStatus.textContent = 'Fetching root structure…';
 
-                } catch (error) {
-                    console.error('Firebase error:', error);
+      output.innerHTML = '';
+      badge.textContent = '…';
 
-                    let friendlyMsg = error.message;
-                    if (error.code === 'PERMISSION_DENIED') {
-                        friendlyMsg = 'Permission denied — check your database rules.';
-                    } else if (error.code === 'NETWORK_ERROR') {
-                        friendlyMsg = 'Network error — verify your internet connection.';
-                    }
+      try {
+        const snapshot = await currentDb.ref('/').get();
 
-                    output.innerHTML = `
-                            <div style="color:#f87171; font-weight:500;">❌ Error</div>
-                            <div style="color:#b7c9e0; margin-top:6px;">${escapeHtml(friendlyMsg)}</div>
-                            <div style="color:#6a7f9e; font-size:13px; margin-top:10px; border-top:1px solid #1e2a3a; padding-top:10px;">
-                                💡 Tip: Ensure your database rules allow <code style="background:#1e2a3a; padding:1px 8px; border-radius:4px;">.read</code> access.
-                            </div>
-                        `;
+        if (!snapshot.exists()) {
+          output.innerHTML = '🗄️ Database is <strong>completely empty</strong> (null root).';
+          badge.textContent = '0';
+          inspectStatus.textContent = 'Empty database';
+          return;
+        }
 
-                    badge.textContent = '✗';
-                    setStatus('⚠️ ' + friendlyMsg, true);
-                } finally {
-                    setLoading(false);
-                }
-            }
+        const data = snapshot.val();
 
-            // ----- Simple escape to prevent XSS (though keys are safe) -----
-            function escapeHtml(str) {
-                const div = document.createElement('div');
-                div.textContent = str;
-                return div.innerHTML;
-            }
+        if (data === null || typeof data !== 'object') {
+          output.innerHTML = '⚠️ Root data exists but is <strong>not a JSON object</strong>.';
+          badge.textContent = '?';
+          inspectStatus.textContent = 'Unexpected data type';
+          return;
+        }
 
-            // ----- Attach event -----
-            btn.addEventListener('click', fetchRootKeys);
+        const keys = Object.keys(data);
 
-            // ----- Auto-run on page load (optional) -----
-            // Uncomment the next line to automatically fetch when the page loads:
-            // fetchRootKeys();
+        if (keys.length === 0) {
+          output.innerHTML = '📭 Root is an empty object — no child nodes found.';
+          badge.textContent = '0';
+          inspectStatus.textContent = 'No root nodes';
+          return;
+        }
 
-            // Show a quick status that we're ready
-            setStatus('Ready — click the button to inspect');
+        // Build pretty list
+        const listHtml = keys.map((key, idx) =>
+          `<div class="key-item">
+                  <span class="bullet">${String(idx + 1).padStart(2, ' ')}.</span>
+                  <span class="key-name">${escapeHtml(key)}</span>
+                </div>`
+        ).join('');
 
-        })();
-    </script>
+        const count = keys.length;
+        badge.textContent = count;
+
+        output.innerHTML = `
+              <div class="key-count">Found <strong>${count}</strong> root node${count > 1 ? 's' : ''}:</div>
+              <div class="key-list">${listHtml}</div>
+            `;
+
+        inspectStatus.textContent = `✅ Loaded ${count} root key${count > 1 ? 's' : ''}`;
+
+      } catch (error) {
+        console.error('Fetch error:', error);
+        let msg = error.message;
+        if (error.code === 'PERMISSION_DENIED') {
+          msg = 'Permission denied — check database rules.';
+        } else if (error.code === 'NETWORK_ERROR') {
+          msg = 'Network error — verify internet / database URL.';
+        } else if (error.message && error.message.includes('URL')) {
+          msg = 'Invalid database URL — please update and apply config.';
+        }
+        output.innerHTML = `
+              <div style="color:#f87171; font-weight:500;">❌ Error</div>
+              <div style="color:#b7c9e0; margin-top:6px;">${escapeHtml(msg)}</div>
+              <div style="color:#6a7f9e; font-size:13px; margin-top:10px; border-top:1px solid #1e2a3a; padding-top:10px;">
+                💡 Check that your database URL is correct and <code style="background:#1e2a3a; padding:1px 8px; border-radius:4px;">.read</code> is allowed.
+              </div>
+            `;
+        badge.textContent = '✗';
+        inspectStatus.textContent = '⚠️ ' + msg;
+      } finally {
+        btnInspect.disabled = false;
+        btnInspect.innerHTML = '🔍 Inspect Root Nodes';
+      }
+    }
+
+    // ----- Utilities -----
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // ----- Event listeners -----
+    btnApply.addEventListener('click', () => {
+      applyConfig();
+    });
+
+    btnInspect.addEventListener('click', fetchRootKeys);
+
+    // ----- Auto‑apply config on page load (so database is ready) -----
+    window.addEventListener('load', () => {
+      // Apply initial config
+      const ok = applyConfig();
+      if (ok) {
+        inspectStatus.textContent = 'Ready — click "Inspect Root Nodes"';
+      } else {
+        inspectStatus.textContent = 'Config error — please check fields and apply.';
+      }
+    });
+
+  })();
+</script>
 
 </body>
 </html>
