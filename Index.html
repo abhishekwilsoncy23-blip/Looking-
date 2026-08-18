@@ -3,141 +3,143 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Firebase Config Editor + Root Inspector</title>
+  <title>Admin – User Manager (Firebase)</title>
   <link rel="icon" href="data:," />
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
     }
-
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
       background: #f0f3f8;
       padding: 24px;
       display: flex;
       justify-content: center;
-      min-height: 100vh;
     }
-
     .container {
-      max-width: 880px;
+      max-width: 960px;
       width: 100%;
       background: #ffffff;
       border-radius: 24px;
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.07);
-      padding: 30px 32px 36px;
+      padding: 28px 30px 34px;
     }
-
     h1 {
       font-size: 26px;
       font-weight: 600;
-      margin: 0 0 6px 0;
       color: #0b1a33;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
+      margin-bottom: 4px;
     }
-
     h1 small {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 400;
       color: #5e6f8d;
     }
-
-    .sub {
-      color: #5e6f8d;
+    .warning-banner {
+      background: #fff4e5;
+      border-left: 6px solid #e67e22;
+      padding: 10px 16px;
+      border-radius: 8px;
       font-size: 14px;
-      margin: 0 0 24px 0;
-      border-left: 4px solid #dce3ef;
-      padding-left: 16px;
+      color: #7a4a1a;
+      margin: 10px 0 22px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .warning-banner strong {
+      color: #a04000;
     }
 
+    /* Config panel */
     .config-panel {
       background: #f8faff;
       border: 1px solid #e3e9f2;
-      border-radius: 16px;
-      padding: 20px 24px 24px;
+      border-radius: 14px;
+      padding: 16px 20px 20px;
       margin-bottom: 28px;
     }
-
     .config-panel h3 {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 500;
-      margin: 0 0 14px 0;
+      margin: 0 0 12px 0;
       color: #1a2b44;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
-
     .config-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px 20px;
+      gap: 8px 16px;
     }
-
     .config-item {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 2px;
     }
-
     .config-item label {
-      font-size: 12px;
-      font-weight: 500;
+      font-size: 11px;
+      font-weight: 600;
       color: #3d4f6b;
-      letter-spacing: 0.3px;
       text-transform: uppercase;
+      letter-spacing: 0.3px;
     }
-
     .config-item input {
-      padding: 8px 12px;
+      padding: 6px 10px;
       border: 1px solid #d0d9e8;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 13px;
-      background: #ffffff;
-      transition: border 0.15s;
+      background: #fff;
       width: 100%;
     }
-
     .config-item input:focus {
       border-color: #1a5cff;
       outline: none;
-      box-shadow: 0 0 0 3px rgba(26, 92, 255, 0.12);
+      box-shadow: 0 0 0 3px rgba(26, 92, 255, 0.1);
     }
-
     .config-actions {
       display: flex;
-      gap: 14px;
-      margin-top: 18px;
-      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 14px;
       align-items: center;
+      flex-wrap: wrap;
     }
-
     .btn {
-      padding: 9px 22px;
+      padding: 8px 20px;
       font-size: 14px;
       font-weight: 500;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
       transition: 0.15s;
       display: inline-flex;
       align-items: center;
       gap: 6px;
     }
-
     .btn-primary {
       background: #1a5cff;
       color: #fff;
-      box-shadow: 0 2px 8px rgba(26, 92, 255, 0.25);
     }
     .btn-primary:hover {
       background: #0f4ad0;
     }
-
+    .btn-success {
+      background: #10a760;
+      color: #fff;
+    }
+    .btn-success:hover {
+      background: #0d8a50;
+    }
+    .btn-danger {
+      background: #e74c3c;
+      color: #fff;
+    }
+    .btn-danger:hover {
+      background: #c0392b;
+    }
     .btn-secondary {
       background: #eef2f7;
       color: #1a2b44;
@@ -145,138 +147,149 @@
     .btn-secondary:hover {
       background: #dce3ef;
     }
-
     .btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
     }
-
     .status-badge {
       font-size: 13px;
-      color: #3d6b4a;
-      background: #e6f5ed;
       padding: 4px 14px;
       border-radius: 30px;
-      display: inline-block;
+      background: #e6f5ed;
+      color: #1e6b3f;
     }
-
     .status-badge.error {
       background: #fde8e8;
       color: #b33a3a;
     }
 
-    .box {
-      border: 1px solid #e3e9f2;
-      border-radius: 16px;
-      padding: 16px 20px 20px;
-      background: #fafcff;
+    /* Main editor */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
     }
-
-    .box-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .box-header h3 {
-      font-size: 17px;
-      font-weight: 500;
-      margin: 0;
-      color: #0b1a33;
-    }
-
-    .box-header .badge {
-      background: #dce3ef;
-      font-size: 13px;
-      padding: 2px 12px;
-      border-radius: 30px;
-      font-weight: 500;
-      color: #1a2b44;
-    }
-
-    .output-wrap {
-      background: #0e141f;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid #1e2a3a;
-    }
-
-    pre {
-      margin: 0;
-      padding: 16px 20px;
-      font-family: 'JetBrains Mono', 'Fira Code', monospace;
-      font-size: 13.5px;
-      line-height: 1.7;
-      color: #e3e9f2;
-      background: #0e141f;
-      overflow-x: auto;
-      max-height: 400px;
-      min-height: 80px;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    .pre-placeholder {
-      color: #6a7f9e;
-      font-style: italic;
-    }
-
-    .status-line {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 10px;
-      font-size: 14px;
-      color: #3d4f6b;
-    }
-
-    .key-list {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .key-item {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      padding: 2px 0;
-    }
-    .key-item .bullet {
-      color: #6a7f9e;
-    }
-    .key-item .key-name {
-      color: #b7d0f0;
-      font-weight: 500;
-    }
-    .key-count {
-      color: #8aa0c0;
-      font-size: 13px;
-      margin-bottom: 8px;
-    }
-
-    @media (max-width: 640px) {
-      .container {
-        padding: 16px;
+    @media (max-width: 700px) {
+      .main-grid {
+        grid-template-columns: 1fr;
       }
       .config-grid {
         grid-template-columns: 1fr;
       }
-      .config-actions {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .btn {
-        justify-content: center;
-      }
-      .box-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+    }
+
+    .user-list-box {
+      border: 1px solid #e3e9f2;
+      border-radius: 14px;
+      padding: 16px 18px 18px;
+      background: #fafcff;
+    }
+    .user-list-box h3 {
+      font-size: 16px;
+      margin: 0 0 12px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .user-list {
+      max-height: 380px;
+      overflow-y: auto;
+    }
+    .user-item {
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eef2f7;
+      transition: background 0.1s;
+    }
+    .user-item:hover {
+      background: #eef4ff;
+    }
+    .user-item.active {
+      background: #dbe7ff;
+      border-left: 4px solid #1a5cff;
+    }
+    .user-item .key {
+      font-weight: 500;
+      color: #0b1a33;
+      font-family: monospace;
+    }
+    .user-item .badge {
+      font-size: 12px;
+      background: #dce3ef;
+      padding: 2px 10px;
+      border-radius: 30px;
+      color: #2c3e5c;
+    }
+
+    .editor-box {
+      border: 1px solid #e3e9f2;
+      border-radius: 14px;
+      padding: 16px 18px 18px;
+      background: #fafcff;
+    }
+    .editor-box h3 {
+      font-size: 16px;
+      margin: 0 0 14px 0;
+    }
+    .field-group {
+      margin-bottom: 14px;
+    }
+    .field-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #2c3e5c;
+      margin-bottom: 3px;
+    }
+    .field-group input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #d0d9e8;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .field-group input:focus {
+      border-color: #1a5cff;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(26, 92, 255, 0.1);
+    }
+    .editor-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .add-user-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      border-top: 1px solid #e3e9f2;
+      padding-top: 16px;
+      align-items: flex-end;
+    }
+    .add-user-row .field-group {
+      flex: 1;
+      margin-bottom: 0;
+    }
+    .add-user-row .field-group input {
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+    .empty-msg {
+      color: #6a7f9e;
+      font-style: italic;
+      padding: 16px 0;
+      text-align: center;
+    }
+
+    .status-line {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #3d4f6b;
     }
   </style>
 </head>
@@ -284,93 +297,105 @@
 
 <div class="container">
   <h1>
-    ⚙️ Firebase Config Editor
-    <small>+ Root Inspector</small>
+    👤 User Manager
+    <small>Firebase Admin Panel</small>
   </h1>
-  <div class="sub">
-    Edit your Firebase Realtime Database settings below, then inspect root nodes.
+  <div class="warning-banner">
+    ⚠️ <strong>No authentication</strong> – this page directly reads/writes your database.
+    Only host this locally or on a trusted private network.
   </div>
 
-  <!-- CONFIGURATION PANEL -->
+  <!-- CONFIG -->
   <div class="config-panel">
-    <h3>🔐 Firebase Configuration</h3>
-    <div class="config-grid" id="configGrid">
-      <div class="config-item">
-        <label>API Key</label>
-        <input type="text" id="cfg-apiKey" value="AIzaSyD-MU0cQwdd08CSRcT3kU5AWCIE-9YBbUo" />
-      </div>
-      <div class="config-item">
-        <label>Auth Domain</label>
-        <input type="text" id="cfg-authDomain" value="anwinbot.firebaseapp.com" />
-      </div>
-      <div class="config-item">
-        <label>Project ID</label>
-        <input type="text" id="cfg-projectId" value="anwinbot" />
-      </div>
-      <div class="config-item">
-        <label>Database URL</label>
-        <input type="text" id="cfg-databaseURL" value="https://anwinbot-default-rtdb.firebaseio.com" />
-      </div>
-      <div class="config-item">
-        <label>Storage Bucket</label>
-        <input type="text" id="cfg-storageBucket" value="anwinbot.firebasestorage.app" />
-      </div>
-      <div class="config-item">
-        <label>Messaging Sender ID</label>
-        <input type="text" id="cfg-messagingSenderId" value="375294740155" />
-      </div>
-      <div class="config-item">
-        <label>App ID</label>
-        <input type="text" id="cfg-appId" value="1:375294740155:web:d40c9b4abe9224ea57cb9e" />
-      </div>
-      <div class="config-item">
-        <label>Measurement ID</label>
-        <input type="text" id="cfg-measurementId" value="G-HRW9QWCLRB" />
-      </div>
+    <h3>🔐 Firebase Config (edit & apply)</h3>
+    <div class="config-grid">
+      <div class="config-item"><label>API Key</label><input id="cfg-apiKey" value="AIzaSyD-MU0cQwdd08CSRcT3kU5AWCIE-9YBbUo" /></div>
+      <div class="config-item"><label>Auth Domain</label><input id="cfg-authDomain" value="anwinbot.firebaseapp.com" /></div>
+      <div class="config-item"><label>Project ID</label><input id="cfg-projectId" value="anwinbot" /></div>
+      <div class="config-item"><label>Database URL</label><input id="cfg-databaseURL" value="https://anwinbot-default-rtdb.firebaseio.com" /></div>
+      <div class="config-item"><label>Storage Bucket</label><input id="cfg-storageBucket" value="anwinbot.firebasestorage.app" /></div>
+      <div class="config-item"><label>Messaging Sender ID</label><input id="cfg-messagingSenderId" value="375294740155" /></div>
+      <div class="config-item"><label>App ID</label><input id="cfg-appId" value="1:375294740155:web:d40c9b4abe9224ea57cb9e" /></div>
+      <div class="config-item"><label>Measurement ID</label><input id="cfg-measurementId" value="G-HRW9QWCLRB" /></div>
     </div>
-
     <div class="config-actions">
       <button class="btn btn-primary" id="btn-apply-config">✅ Apply Config</button>
       <span id="config-status" class="status-badge">Ready</span>
-      <span style="font-size:13px; color:#5e6f8d; margin-left:auto;">Changes take effect immediately</span>
+      <span style="font-size:13px; color:#5e6f8d; margin-left:auto;">Changes apply immediately</span>
     </div>
   </div>
 
-  <!-- INSPECTOR -->
-  <div class="box">
-    <div class="box-header">
-      <h3>📂 Root Keys</h3>
-      <span class="badge" id="key-count-badge">—</span>
+  <!-- MAIN: User List + Editor -->
+  <div class="main-grid">
+    <!-- LEFT: User List -->
+    <div class="user-list-box">
+      <h3>
+        <span>📋 Users</span>
+        <button class="btn btn-secondary" id="btn-refresh" style="padding:4px 14px; font-size:13px;">🔄 Refresh</button>
+      </h3>
+      <div style="display:flex; gap:8px; margin-bottom:12px; align-items:center;">
+        <label style="font-size:13px; font-weight:500; color:#2c3e5c;">Path:</label>
+        <input id="user-path-input" value="/users" style="flex:1; padding:6px 10px; border:1px solid #d0d9e8; border-radius:6px; font-size:13px;" />
+        <button class="btn btn-primary" id="btn-load-users" style="padding:6px 16px; font-size:13px;">Load</button>
+      </div>
+      <div class="user-list" id="user-list-container">
+        <div class="empty-msg">Click "Load" to fetch users.</div>
+      </div>
+      <div class="status-line" id="list-status">Ready</div>
     </div>
 
-    <div class="output-wrap">
-      <pre id="output-rtdb"><span class="pre-placeholder">Root table names will appear here…</span></pre>
-    </div>
+    <!-- RIGHT: Editor -->
+    <div class="editor-box">
+      <h3>✏️ Edit User</h3>
+      <div class="field-group">
+        <label>User Key (ID)</label>
+        <input id="edit-key" placeholder="user1" readonly style="background:#f0f3f8; cursor:not-allowed;" />
+      </div>
+      <div class="field-group">
+        <label>Username</label>
+        <input id="edit-username" placeholder="Enter username" />
+      </div>
+      <div class="field-group">
+        <label>Password</label>
+        <input id="edit-password" placeholder="Enter password" type="text" />
+      </div>
+      <div class="editor-actions">
+        <button class="btn btn-success" id="btn-save">💾 Save Changes</button>
+        <button class="btn btn-danger" id="btn-delete">🗑️ Delete User</button>
+        <button class="btn btn-secondary" id="btn-clear">Clear</button>
+      </div>
+      <div class="status-line" id="editor-status">Select a user from the list.</div>
 
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:12px;">
-      <button class="btn btn-primary" id="btn-rtdb-roots">🔍 Inspect Root Nodes</button>
-      <span id="inspect-status" style="font-size:14px; color:#3d4f6b;">Ready</span>
+      <!-- Add new user -->
+      <div class="add-user-row">
+        <div class="field-group">
+          <label>New User Key</label>
+          <input id="new-key" placeholder="e.g. user3" />
+        </div>
+        <div class="field-group">
+          <label>New Username</label>
+          <input id="new-username" placeholder="username" />
+        </div>
+        <div class="field-group">
+          <label>New Password</label>
+          <input id="new-password" placeholder="password" type="text" />
+        </div>
+        <button class="btn btn-primary" id="btn-add" style="margin-bottom:2px;">➕ Add</button>
+      </div>
     </div>
-  </div>
-
-  <div style="margin-top:20px; font-size:12px; color:#6a7f9e; border-top:1px solid #e3e9f2; padding-top:16px;">
-    <span>Project: <code>anwinbot</code></span> &nbsp;·&nbsp;
-    <span>Click <strong>Apply Config</strong> after editing any field.</span>
   </div>
 </div>
 
 <!-- Firebase Compat SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
-</script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js">
-</script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
 <script>
   (function() {
     'use strict';
 
-    // ----- DOM refs (config) -----
-    const cfgFields = {
+    // ---- DOM refs ----
+    const cfg = {
       apiKey: document.getElementById('cfg-apiKey'),
       authDomain: document.getElementById('cfg-authDomain'),
       projectId: document.getElementById('cfg-projectId'),
@@ -380,192 +405,316 @@
       appId: document.getElementById('cfg-appId'),
       measurementId: document.getElementById('cfg-measurementId'),
     };
-
     const btnApply = document.getElementById('btn-apply-config');
     const configStatus = document.getElementById('config-status');
 
-    const btnInspect = document.getElementById('btn-rtdb-roots');
-    const output = document.getElementById('output-rtdb');
-    const badge = document.getElementById('key-count-badge');
-    const inspectStatus = document.getElementById('inspect-status');
+    const pathInput = document.getElementById('user-path-input');
+    const btnLoad = document.getElementById('btn-load-users');
+    const btnRefresh = document.getElementById('btn-refresh');
+    const userListContainer = document.getElementById('user-list-container');
+    const listStatus = document.getElementById('list-status');
 
-    // ----- Current Firebase app & database reference -----
+    const editKey = document.getElementById('edit-key');
+    const editUsername = document.getElementById('edit-username');
+    const editPassword = document.getElementById('edit-password');
+    const btnSave = document.getElementById('btn-save');
+    const btnDelete = document.getElementById('btn-delete');
+    const btnClear = document.getElementById('btn-clear');
+    const editorStatus = document.getElementById('editor-status');
+
+    const newKey = document.getElementById('new-key');
+    const newUsername = document.getElementById('new-username');
+    const newPassword = document.getElementById('new-password');
+    const btnAdd = document.getElementById('btn-add');
+
     let currentApp = null;
     let currentDb = null;
+    let currentSelectedKey = null;
+    let currentUserData = {};
 
-    // ----- Helper: get config object from inputs -----
-    function getConfigFromUI() {
+    // ---- Helpers ----
+    function getConfig() {
       return {
-        apiKey: cfgFields.apiKey.value.trim(),
-        authDomain: cfgFields.authDomain.value.trim(),
-        projectId: cfgFields.projectId.value.trim(),
-        databaseURL: cfgFields.databaseURL.value.trim(),
-        storageBucket: cfgFields.storageBucket.value.trim(),
-        messagingSenderId: cfgFields.messagingSenderId.value.trim(),
-        appId: cfgFields.appId.value.trim(),
-        measurementId: cfgFields.measurementId.value.trim(),
+        apiKey: cfg.apiKey.value.trim(),
+        authDomain: cfg.authDomain.value.trim(),
+        projectId: cfg.projectId.value.trim(),
+        databaseURL: cfg.databaseURL.value.trim(),
+        storageBucket: cfg.storageBucket.value.trim(),
+        messagingSenderId: cfg.messagingSenderId.value.trim(),
+        appId: cfg.appId.value.trim(),
+        measurementId: cfg.measurementId.value.trim(),
       };
     }
 
-    // ----- Apply config (re‑initialize Firebase) -----
     function applyConfig() {
-      const config = getConfigFromUI();
-
-      // Validate required fields
+      const config = getConfig();
       if (!config.apiKey || !config.databaseURL || !config.projectId) {
-        configStatus.textContent = '❌ Missing required fields (apiKey, databaseURL, projectId)';
+        configStatus.textContent = '❌ Missing required fields';
         configStatus.className = 'status-badge error';
         return false;
       }
-
       try {
-        // Delete existing app (if any) to avoid "already initialized" errors
         if (currentApp) {
-          // For compat SDK, we can delete the app by name if we used a named app.
-          // Since we use default, we can't delete it easily, but we can reinitialize with a different name.
-          // Better: use a named app for each config.
-          // We'll use a named app "custom" and re‑create it.
-          try {
-            const existing = firebase.app('custom');
-            existing.delete();
-          } catch (_) { /* ignore if not exists */ }
+          try { firebase.app('admin').delete(); } catch (_) {}
         }
-
-        // Initialize with a unique name (so we can delete later)
-        const app = firebase.initializeApp(config, 'custom');
+        const app = firebase.initializeApp(config, 'admin');
         currentApp = app;
         currentDb = firebase.database(app);
-
-        configStatus.textContent = '✅ Config applied successfully';
+        configStatus.textContent = '✅ Config applied';
         configStatus.className = 'status-badge';
-        inspectStatus.textContent = 'Ready (config updated)';
-        // Reset output
-        output.innerHTML = '<span class="pre-placeholder">Root table names will appear here…</span>';
-        badge.textContent = '—';
         return true;
-      } catch (error) {
-        console.error('Config apply error:', error);
-        configStatus.textContent = '❌ Error: ' + error.message;
+      } catch (e) {
+        configStatus.textContent = '❌ ' + e.message;
         configStatus.className = 'status-badge error';
         return false;
       }
     }
 
-    // ----- Inspect root keys using currentDb -----
-    async function fetchRootKeys() {
+    function getDb() {
       if (!currentDb) {
-        // Try to apply config first
-        const ok = applyConfig();
-        if (!ok) {
-          inspectStatus.textContent = '⚠️ Please fix config and apply.';
-          return;
-        }
+        if (!applyConfig()) return null;
       }
+      return currentDb;
+    }
 
-      // Show loading
-      btnInspect.disabled = true;
-      btnInspect.innerHTML = '⏳ Loading…';
-      inspectStatus.textContent = 'Fetching root structure…';
+    function escapeHtml(str) {
+      const d = document.createElement('div');
+      d.textContent = str;
+      return d.innerHTML;
+    }
 
-      output.innerHTML = '';
-      badge.textContent = '…';
+    function setListStatus(msg, isError = false) {
+      listStatus.textContent = msg;
+      listStatus.style.color = isError ? '#c0392b' : '#3d4f6b';
+    }
+
+    function setEditorStatus(msg, isError = false) {
+      editorStatus.textContent = msg;
+      editorStatus.style.color = isError ? '#c0392b' : '#3d4f6b';
+    }
+
+    // ---- Load users ----
+    async function loadUsers() {
+      const db = getDb();
+      if (!db) { setListStatus('❌ Database not initialized', true); return; }
+
+      const path = pathInput.value.trim() || '/users';
+      setListStatus('Loading...');
+      userListContainer.innerHTML = '<div class="empty-msg">⏳ Fetching...</div>';
 
       try {
-        const snapshot = await currentDb.ref('/').get();
-
-        if (!snapshot.exists()) {
-          output.innerHTML = '🗄️ Database is <strong>completely empty</strong> (null root).';
-          badge.textContent = '0';
-          inspectStatus.textContent = 'Empty database';
+        const snap = await db.ref(path).get();
+        if (!snap.exists()) {
+          userListContainer.innerHTML = `<div class="empty-msg">📭 No users found at "${escapeHtml(path)}"</div>`;
+          setListStatus('Empty');
           return;
         }
-
-        const data = snapshot.val();
-
-        if (data === null || typeof data !== 'object') {
-          output.innerHTML = '⚠️ Root data exists but is <strong>not a JSON object</strong>.';
-          badge.textContent = '?';
-          inspectStatus.textContent = 'Unexpected data type';
+        const data = snap.val();
+        if (typeof data !== 'object' || data === null) {
+          userListContainer.innerHTML = `<div class="empty-msg">⚠️ Data is not an object at "${escapeHtml(path)}"</div>`;
+          setListStatus('Invalid structure');
           return;
         }
 
         const keys = Object.keys(data);
-
         if (keys.length === 0) {
-          output.innerHTML = '📭 Root is an empty object — no child nodes found.';
-          badge.textContent = '0';
-          inspectStatus.textContent = 'No root nodes';
+          userListContainer.innerHTML = `<div class="empty-msg">📭 Empty object at "${escapeHtml(path)}"</div>`;
+          setListStatus('Empty');
           return;
         }
 
-        // Build pretty list
-        const listHtml = keys.map((key, idx) =>
-          `<div class="key-item">
-                  <span class="bullet">${String(idx + 1).padStart(2, ' ')}.</span>
-                  <span class="key-name">${escapeHtml(key)}</span>
-                </div>`
-        ).join('');
+        let html = '';
+        keys.forEach(key => {
+          const user = data[key] || {};
+          const username = user.username || user.name || '—';
+          const pass = user.password ? '••••' : '—';
+          html += `
+            <div class="user-item" data-key="${escapeHtml(key)}">
+              <span class="key">${escapeHtml(key)}</span>
+              <span class="badge">👤 ${escapeHtml(username)}</span>
+            </div>
+          `;
+        });
+        userListContainer.innerHTML = html;
+        setListStatus(`✅ ${keys.length} user(s) loaded`);
 
-        const count = keys.length;
-        badge.textContent = count;
+        // Attach click listeners
+        document.querySelectorAll('.user-item').forEach(el => {
+          el.addEventListener('click', () => {
+            const key = el.dataset.key;
+            selectUser(key);
+          });
+        });
 
-        output.innerHTML = `
-              <div class="key-count">Found <strong>${count}</strong> root node${count > 1 ? 's' : ''}:</div>
-              <div class="key-list">${listHtml}</div>
-            `;
-
-        inspectStatus.textContent = `✅ Loaded ${count} root key${count > 1 ? 's' : ''}`;
-
-      } catch (error) {
-        console.error('Fetch error:', error);
-        let msg = error.message;
-        if (error.code === 'PERMISSION_DENIED') {
-          msg = 'Permission denied — check database rules.';
-        } else if (error.code === 'NETWORK_ERROR') {
-          msg = 'Network error — verify internet / database URL.';
-        } else if (error.message && error.message.includes('URL')) {
-          msg = 'Invalid database URL — please update and apply config.';
-        }
-        output.innerHTML = `
-              <div style="color:#f87171; font-weight:500;">❌ Error</div>
-              <div style="color:#b7c9e0; margin-top:6px;">${escapeHtml(msg)}</div>
-              <div style="color:#6a7f9e; font-size:13px; margin-top:10px; border-top:1px solid #1e2a3a; padding-top:10px;">
-                💡 Check that your database URL is correct and <code style="background:#1e2a3a; padding:1px 8px; border-radius:4px;">.read</code> is allowed.
-              </div>
-            `;
-        badge.textContent = '✗';
-        inspectStatus.textContent = '⚠️ ' + msg;
-      } finally {
-        btnInspect.disabled = false;
-        btnInspect.innerHTML = '🔍 Inspect Root Nodes';
+      } catch (e) {
+        console.error(e);
+        userListContainer.innerHTML = `<div class="empty-msg" style="color:#c0392b;">❌ Error: ${escapeHtml(e.message)}</div>`;
+        setListStatus('Error loading', true);
       }
     }
 
-    // ----- Utilities -----
-    function escapeHtml(str) {
-      const div = document.createElement('div');
-      div.textContent = str;
-      return div.innerHTML;
+    // ---- Select a user ----
+    async function selectUser(key) {
+      const db = getDb();
+      if (!db) { setEditorStatus('DB not ready', true); return; }
+      const path = pathInput.value.trim() || '/users';
+      currentSelectedKey = key;
+
+      // Highlight
+      document.querySelectorAll('.user-item').forEach(el => el.classList.remove('active'));
+      document.querySelector(`.user-item[data-key="${key}"]`)?.classList.add('active');
+
+      editKey.value = key;
+      setEditorStatus(`Loading "${key}"...`);
+
+      try {
+        const snap = await db.ref(`${path}/${key}`).get();
+        if (!snap.exists()) {
+          editUsername.value = '';
+          editPassword.value = '';
+          setEditorStatus(`⚠️ User "${key}" has no data`, true);
+          return;
+        }
+        const data = snap.val();
+        currentUserData = data;
+        editUsername.value = data.username || data.name || '';
+        editPassword.value = data.password || '';
+        setEditorStatus(`✅ Loaded user "${key}"`);
+      } catch (e) {
+        setEditorStatus('❌ ' + e.message, true);
+      }
     }
 
-    // ----- Event listeners -----
-    btnApply.addEventListener('click', () => {
-      applyConfig();
-    });
+    // ---- Save changes ----
+    async function saveUser() {
+      const key = editKey.value.trim();
+      if (!key) { setEditorStatus('❌ No user selected', true); return; }
+      const username = editUsername.value.trim();
+      const password = editPassword.value.trim();
+      if (!username && !password) {
+        setEditorStatus('❌ Username or password required', true);
+        return;
+      }
 
-    btnInspect.addEventListener('click', fetchRootKeys);
+      const db = getDb();
+      if (!db) { setEditorStatus('DB not ready', true); return; }
+      const path = pathInput.value.trim() || '/users';
 
-    // ----- Auto‑apply config on page load (so database is ready) -----
-    window.addEventListener('load', () => {
-      // Apply initial config
+      const updates = {};
+      if (username) updates.username = username;
+      if (password) updates.password = password;
+
+      try {
+        await db.ref(`${path}/${key}`).update(updates);
+        setEditorStatus(`✅ User "${key}" updated successfully`);
+        // Refresh list
+        loadUsers();
+        // Update highlight
+        document.querySelectorAll('.user-item').forEach(el => el.classList.remove('active'));
+        document.querySelector(`.user-item[data-key="${key}"]`)?.classList.add('active');
+      } catch (e) {
+        setEditorStatus('❌ ' + e.message, true);
+      }
+    }
+
+    // ---- Delete user ----
+    async function deleteUser() {
+      const key = editKey.value.trim();
+      if (!key) { setEditorStatus('❌ No user selected', true); return; }
+      if (!confirm(`Delete user "${key}" permanently?`)) return;
+
+      const db = getDb();
+      if (!db) { setEditorStatus('DB not ready', true); return; }
+      const path = pathInput.value.trim() || '/users';
+
+      try {
+        await db.ref(`${path}/${key}`).remove();
+        setEditorStatus(`🗑️ User "${key}" deleted`);
+        editKey.value = '';
+        editUsername.value = '';
+        editPassword.value = '';
+        currentSelectedKey = null;
+        loadUsers();
+      } catch (e) {
+        setEditorStatus('❌ ' + e.message, true);
+      }
+    }
+
+    // ---- Add new user ----
+    async function addUser() {
+      const key = newKey.value.trim();
+      const username = newUsername.value.trim();
+      const password = newPassword.value.trim();
+      if (!key) { setEditorStatus('❌ New user key required', true); return; }
+      if (!username && !password) { setEditorStatus('❌ Username or password required', true); return; }
+
+      const db = getDb();
+      if (!db) { setEditorStatus('DB not ready', true); return; }
+      const path = pathInput.value.trim() || '/users';
+
+      const data = {};
+      if (username) data.username = username;
+      if (password) data.password = password;
+
+      try {
+        await db.ref(`${path}/${key}`).set(data);
+        setEditorStatus(`✅ User "${key}" added`);
+        newKey.value = '';
+        newUsername.value = '';
+        newPassword.value = '';
+        loadUsers();
+        // Auto-select new user
+        setTimeout(() => selectUser(key), 300);
+      } catch (e) {
+        setEditorStatus('❌ ' + e.message, true);
+      }
+    }
+
+    // ---- Clear editor ----
+    function clearEditor() {
+      editKey.value = '';
+      editUsername.value = '';
+      editPassword.value = '';
+      currentSelectedKey = null;
+      document.querySelectorAll('.user-item').forEach(el => el.classList.remove('active'));
+      setEditorStatus('Cleared');
+    }
+
+    // ---- Init ----
+    function init() {
+      // Apply config on load
       const ok = applyConfig();
       if (ok) {
-        inspectStatus.textContent = 'Ready — click "Inspect Root Nodes"';
+        // Auto-load users from default path
+        setTimeout(() => loadUsers(), 300);
       } else {
-        inspectStatus.textContent = 'Config error — please check fields and apply.';
+        listStatus.textContent = '⚠️ Config error – fix and apply.';
       }
-    });
 
+      // Event listeners
+      btnApply.addEventListener('click', () => {
+        applyConfig();
+        loadUsers();
+      });
+
+      btnLoad.addEventListener('click', loadUsers);
+      btnRefresh.addEventListener('click', loadUsers);
+
+      btnSave.addEventListener('click', saveUser);
+      btnDelete.addEventListener('click', deleteUser);
+      btnClear.addEventListener('click', clearEditor);
+      btnAdd.addEventListener('click', addUser);
+
+      // Enter key shortcuts
+      document.getElementById('new-password').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') addUser();
+      });
+      document.getElementById('edit-password').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') saveUser();
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
   })();
 </script>
 
